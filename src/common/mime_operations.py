@@ -8,7 +8,6 @@ Created on Wed Nov 23 18:26:27 2016
 
 import gi
 gi.require_version('Gtk', '3.0')
-
 from gi.repository import Gio, Gtk
 from gi.repository import GdkPixbuf
 
@@ -19,10 +18,16 @@ from functools import lru_cache
 def get_default_app(mime_type):
     return Gio.app_info_get_default_for_type(mime_type, False)
     
-def get_app_from_cline(cline, name, terminal):
+def get_app_from_cline(cline, name, terminal = False):
     """   cl - command line
           name - app name
           terminal - open in terminal """
+          
+    if cline is None or len(cline) == 0:
+        return None
+          
+    if name is None or len(name) == 0:
+        name = os.path.basename(cline)
     flag = Gio.AppInfoCreateFlags.NEEDS_TERMINAL if terminal \
                 else Gio.AppInfoCreateFlags.NONE 
     return Gio.AppInfo.create_from_commandline(cline, name, flag)    
@@ -38,27 +43,43 @@ def get_app_bio(app, icon_size):
         icon = get_icon_by_app(app, icon_size)
         cl = app.get_commandline()
         
-    return name, icon, cl       
+    return name, icon, cl
+    
+    
+@lru_cache(maxsize=256)
+def get_mime_bio(mime_type, icon_size):
+    description = ""
+    icon = None
+    
+    try:
+        description = Gio.content_type_get_description(mime_type)
+        icon = get_mime_icon(mime_type, icon_size)
+    except Exception as e:
+        print(e)   
+    
+    return description, icon
+           
     
 def get_known_mtypes():
     return Gio.content_types_get_registered()
     
+def get_mtypes_for_app(app) :
+    if app is None : return []
+    mtypes = set(app.get_supported_types()) 
+    #does not take in consideration associations added with g_app_info_add_supports_type()
+    
+    
+    for mtype in get_known_mtypes():
+        for a in get_apps_for_mtype(mtype):
+            if app.equal(a):
+                mtypes.add(mtype)
+                break
+    
+    return sorted(list(mtypes))
+    
 def get_apps_for_mtype(mime_type):
     return Gio.app_info_get_all_for_type(mime_type)
-
-def set_app_default(app, m_types):    
-    for m_type in m_types:
-        try:
-            app.set_as_default_for_type(m_type)
-        except Exception as e:
-            print(e)
-
-def reset_association(m_type):
-    try: 
-        Gio.AppInfo.reset_type_associations(m_type)
-    except Exception as e:
-            print(e)        
-            
+    
 def get_apps_for_mtypes(mime_types_list):
     apps = {}  
     for mtype in mime_types_list:
@@ -66,7 +87,45 @@ def get_apps_for_mtypes(mime_types_list):
             #using id_ to eliminate duplicates
             id_ = app.get_commandline()#app.get_id()
             apps[id_] = app
-    return list(apps.values())
+    return list(apps.values())    
+    
+def is_app_associated(app, mtype):
+    associated_app_ids = [ap.get_id() for ap in get_apps_for_mtype(mtype)]
+    return app.get_id() in associated_app_ids
+    
+def is_app_default(app, mtype):
+    try:
+        default = get_default_app(mtype)
+        return app.equal(default)
+    except Exception as e:
+        print(e)
+        return False
+    
+def set_app_default(app, mtypes):    
+    for mtype in mtypes:
+        try:
+            app.set_as_default_for_type(mtype)
+        except Exception as e:
+            print(e)
+
+def reset_associations(mtypes):
+    for mtype in mtypes:
+        try: 
+            Gio.AppInfo.reset_type_associations(mtype)
+        except Exception as e:
+                print(e)
+            
+def remove_associations(app, mtypes):
+    for mtype in mtypes:
+        try: 
+            app.remove_supports_type(mtype)
+        except Exception as e:
+                print(e)    
+            
+
+    
+def get_all_apps():    
+    return Gio.app_info_get_all()
 
 @lru_cache(maxsize=256)   
 def get_icon_by_name(icon_name, size): 
@@ -136,3 +195,4 @@ def get_mime_icon(mtype, size):
         print(e)
 
     return icon
+ 

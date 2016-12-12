@@ -33,11 +33,13 @@ import mime_editor_cat_mode
 APP = os.path.join(DIR, "python-mime-editor-gui")
 GLADE_FILE = "ui_main_window.glade"
 
-editor_modes = {  "by_apps" : mime_editor_app_mode.MainWidget,
-                    "by_categories" : mime_editor_cat_mode.MainWidget }
+editor_modes = {  "app_mode" : mime_editor_app_mode.MainWidget,
+                  "cat_mode" : mime_editor_cat_mode.MainWidget }
 
 class MainWindow:
     def __init__(self, mode):
+        self.current_mode = mode
+
         self.builder = Gtk.Builder()
         self.builder.set_translation_domain(APP)
         self.builder.add_from_file(GLADE_FILE)
@@ -52,6 +54,21 @@ class MainWindow:
 
         self.viewport.pack_start(editor.get_widget(), True, True, 0)
 
+        self._init_menu()
+
+    def _init_menu(self):
+        quit_menuitem = self.builder.get_object("quit_menuitem")
+        quit_menuitem.connect("activate", self.on_close)
+
+        #change mode
+        cat_mode_menuitem = self.builder.get_object("cat_mode_menuitem")
+        app_mode_menuitem = self.builder.get_object("app_mode_menuitem")
+        if self.current_mode == "cat_mode":
+            cat_mode_menuitem.set_active(True)
+        elif self.current_mode == "app_mode":
+            app_mode_menuitem.set_active(True)
+        cat_mode_menuitem.connect("activate", self.switch_mode, "cat_mode")
+        app_mode_menuitem.connect("activate", self.switch_mode, "app_mode")
 
     def run(self):
         self.window.show()
@@ -60,9 +77,15 @@ class MainWindow:
     def on_close(self, *args):
         Gtk.main_quit()
 
+    def switch_mode(self, widget, new_mode):
+        if new_mode != self.current_mode:
+            os.execl(sys.executable, sys.executable, sys.argv[0], new_mode)
+
 
 if __name__ == "__main__":
-    #main(sys.argv)
-    #window = MainWindow("by_categories")
-    window = MainWindow("by_apps")
+    mode = "cat_mode"
+    if len(sys.argv) > 1 and sys.argv[1] in editor_modes:
+        mode = sys.argv[1]
+
+    window = MainWindow(mode)
     window.run()

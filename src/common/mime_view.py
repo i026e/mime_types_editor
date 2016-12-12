@@ -125,8 +125,8 @@ class MimeView:
 
     def cascade_filter_func(self, model, iter_, data):
         # return True if all conditions are satisfied
-        for data_filter in self.ordered_data_filters:
-            if not data_filter.process_row(model, iter_, data):
+        for filter_ in self.ordered_data_filters:
+            if not filter_.process_row(model, iter_, data):
                 return False
         return True
 
@@ -173,6 +173,28 @@ class MimeView:
 
         return value
 
+    def iterate_all(self):
+        tree_iter = self.list_store.get_iter_first()
+        while tree_iter:
+            yield self.list_store, tree_iter
+
+            tree_iter = self.list_store.iter_next(tree_iter)
+
+    def iterate_visible(self):
+        tree_iter = self.list_store.get_iter_first()
+        while tree_iter:
+            if self.cascade_filter_func(self.list_store, tree_iter, None):
+                yield self.list_store, tree_iter
+            tree_iter = self.list_store.iter_next(tree_iter)
+
+    def iterate_selected(self):
+        (model, pathlist) = self.tree_selection.get_selected_rows()
+
+        for path in pathlist :
+            tree_iter = self.list_store.get_iter(self.get_store_path(path))
+            yield self.list_store, tree_iter
+
+
     def set_value_if_cond(self, model, tree_iter, column,
                          get_value_func = None, value = None,
                          conditions_func = None, **kwargs):
@@ -192,47 +214,38 @@ class MimeView:
     def set_value_to_all(self, column,
                          get_value_func = None, value = None,
                          conditions_func = None, **kwargs):
-
-        tree_iter = self.list_store.get_iter_first()
-        while tree_iter:
-            self.set_value_if_cond(self.list_store, tree_iter, column,
+        
+        for (model, iter_) in self.iterate_all():
+            self.set_value_if_cond(model, iter_, column,
                                    get_value_func, value,
                                    conditions_func, **kwargs)
 
-            tree_iter = self.list_store.iter_next(tree_iter)
 
     def set_value_to_selected(self, column,
                          get_value_func = None, value = None,
                          conditions_func = None, **kwargs):
-        (model, pathlist) = self.tree_selection.get_selected_rows()
-
-        for path in pathlist :
-            tree_iter = self.list_store.get_iter(self.get_store_path(path))
-
-            self.set_value_if_cond(self.list_store, tree_iter, column,
+        
+        for (model, iter_) in self.iterate_selected():
+            self.set_value_if_cond(model, iter_, column,
                                    get_value_func, value,
                                    conditions_func, **kwargs)
+            
 
     def set_value_to_visible(self, column,
                          get_value_func = None, value = None,
                          conditions_func = None, **kwargs):
-
-        tree_iter = self.list_store.get_iter_first()
-        while tree_iter:
-            if self.cascade_filter_func(self.list_store, tree_iter, None):
-                self.set_value_if_cond(self.list_store, tree_iter, column,
+        
+        for (model, iter_) in self.iterate_visible():
+            self.set_value_if_cond(model, iter_, column,
                                    get_value_func, value,
                                    conditions_func, **kwargs)
-            tree_iter = self.list_store.iter_next(tree_iter)
 
     def get_selection(self, column):
         selection = []
 
-        (model, pathlist) = self.tree_selection.get_selected_rows()
+        for (model, iter_) in self.iterate_selected():
+            selection.append(model.get_value(iter_, column))
 
-        for path in pathlist :
-            tree_iter = self.list_store.get_iter(self.get_store_path(path))
-            selection.append(self.list_store.get_value(tree_iter, column))
         return selection
 
     def filter_category(self, category_id = mime_categories.ANY_CATEGORY_ID):

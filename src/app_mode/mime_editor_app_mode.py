@@ -262,9 +262,12 @@ class AddAppDialog:
                         self.command_field.set_text)
 
 class CategoriesBox(gtk_common.CategoriesWidget):
+    DEFAULT_SELECTION = -1
+
     def __init__(self, builder, on_category_changed):
         super(CategoriesBox, self).__init__(builder, "categories_combobox",
                                                         on_category_changed)
+        self.set_active(self.DEFAULT_SELECTION)
 
     def _init_widget(self):
         renderer_pixbuf = Gtk.CellRendererPixbuf()
@@ -283,8 +286,13 @@ class CategoriesBox(gtk_common.CategoriesWidget):
         value = self.list_store.get_value(iter_, self.CAT_ID)
         self.on_category_changed(value)
 
+    def set_active(self, index):
+        iter_ = self.list_store[index].iter
+        self.widget.set_active_iter(iter_)
+
     def disable(self):
         self.widget.set_sensitive(False)
+
     def enable(self) :
         self.widget.set_sensitive(True)
 
@@ -388,6 +396,7 @@ class MainWidget:
     def on_show_only_registered_radiobutton_clicked(self, *args):
         self.mimes_view.filter_associated(show_all = False)
         self.categories_box.disable()
+        self.categories_box.set_active(self.categories_box.DEFAULT_SELECTION)
 
     def on_show_all_radiobutton_clicked(self, *args):
         self.mimes_view.filter_associated(show_all = True)

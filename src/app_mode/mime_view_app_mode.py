@@ -55,7 +55,7 @@ class MimeViewApps(mime_view.MimeView):
         super(MimeViewApps, self).__init__(*args, **kwargs)
 
         self.list_store_modified = self.set_consistence
-        self.delete_menuitem = self.builder.get_object("delete_menuitem")
+        self.menuitem_delete = self.builder.get_object("delete_menuitem")
 
     def _init_mappings(self):
         super(MimeViewApps, self)._init_mappings()
@@ -158,6 +158,10 @@ class MimeViewApps(mime_view.MimeView):
         self.set_value_to_all(self.MIME_SELECTED, get_value_func = self.get_default_mark)
         self.set_consistence()
 
+    def reset_mark_visible(self):
+        set_value_to_visible(self.MIME_SELECTED, get_value_func = self.get_default_mark)
+        self.set_consistence()
+
     def reset_mark_selected(self):
         self.set_value_to_selected(self.MIME_SELECTED,
                                    get_value_func = self.get_default_mark)
@@ -165,6 +169,11 @@ class MimeViewApps(mime_view.MimeView):
 
     def mark_all(self, mark = True):
         self.set_value_to_all(self.MIME_SELECTED, value = mark,
+                              conditions_func = self.changeable)
+        self.set_consistence()
+
+    def mark_visible(self, mark = True):
+        self.set_value_to_visible(self.MIME_SELECTED, value = mark,
                               conditions_func = self.changeable)
         self.set_consistence()
 
@@ -215,9 +224,6 @@ class MimeViewApps(mime_view.MimeView):
         return to_delete, to_set, to_reset
 
 
-
-
-
     def on_flag_toggled(self, renderer, str_path, *data):
         self.swap_mark_by_path(Gtk.TreePath.new_from_string(str_path))
 
@@ -227,31 +233,36 @@ class MimeViewApps(mime_view.MimeView):
             otherwise : mark would be assigned to each row
         """
         if reset:
-            self.reset_mark_all()
+            self.reset_mark_visible()
         else:
-            self.mark_all(mark)
+            self.mark_visible(mark)
 
     def on_double_click(self, widget, event):
         self.mark_selected(invert = True) #invert mark
 
     def set_consistence(self, initial_mode = False):
-        tree_iter = self.list_store.get_iter_first()
+        """check if all checkboxes are marked
+        and set checkbox in column title
 
-        if not tree_iter:
-            self.flag_column.set_flag_inactive()
-            return
+        if initial_mode, also degeneracy mode
+        (only checked/unchecked states without inconsistency)
+        for checkbox in column title
 
-        first_mark = self.list_store.get_value(tree_iter, self.MIME_SELECTED)
+        """
+        first_mark = None
         consistent = True
 
-        while tree_iter:
-            if first_mark != self.list_store.get_value(tree_iter, self.MIME_SELECTED):
+        for (model, iter_) in self.iterate_visible():
+            if first_mark is None:
+                first_mark = model.get_value(iter_, self.MIME_SELECTED)
+            elif first_mark != model.get_value(iter_, self.MIME_SELECTED):
                 consistent = False
                 break
-            tree_iter = self.list_store.iter_next(tree_iter)
 
+        if first_mark is None: #no records
+            self.flag_column.set_flag_inactive()
 
-        if consistent:
+        elif consistent: #consisten records
             self.flag_column.set_flag_active(first_mark)
 
             if initial_mode:
@@ -265,5 +276,5 @@ class MimeViewApps(mime_view.MimeView):
     def filter_associated(self, show_all = False):
         self.set_filter_params("associated_filter",
                                enabled = not show_all)
-        self.delete_menuitem.set_sensitive(not show_all)
+        self.menuitem_delete.set_sensitive(not show_all)
 

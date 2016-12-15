@@ -30,7 +30,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL) #handle Ctrl-C
 import mime_editor_app_mode
 import mime_editor_cat_mode
 
-APP = os.path.join(DIR, "python-mime-editor-gui")
+APP = os.path.join(DIR, "mime-editor-gui")
 GLADE_FILE = "ui_main_window.glade"
 
 editor_modes = {  "app_mode" : mime_editor_app_mode.MainWidget,

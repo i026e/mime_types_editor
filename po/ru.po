@@ -1,0 +1,196 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE mime-editor-gui'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the mime-editor-gui package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: mime-editor-gui \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-15 10:22+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/cat_mode/ui_cat_mode.glade:275
+msgid "..."
+msgstr "..."
+
+#: src/cat_mode/ui_cat_mode.glade:124
+msgid "... or enter custom command"
+msgstr "... или введите свою команду"
+
+#: src/app_mode/ui_app_mode.glade:213
+msgid "Add association"
+msgstr "Добавить ассоциацию"
+
+#: src/app_mode/ui_app_mode.glade:60
+msgid "Add new app"
+msgstr "Добавить приложение"
+
+#: src/app_mode/ui_app_mode.glade:192
+msgid "Add new mime type"
+msgstr "Добавить тип"
+
+#: src/common/mime_categories.py:12
+msgid "All"
+msgstr "Все"
+
+#: src/app_mode/mime_editor_app_mode.py:73
+#: src/cat_mode/mime_editor_cat_mode.py:188 src/common/mime_categories.py:21
+msgid "Application"
+msgstr "Приложение"
+
+#: src/app_mode/ui_app_mode.glade:571
+msgid "Application command"
+msgstr "Команда"
+
+#: src/app_mode/ui_app_mode.glade:490
+msgid "Application name"
+msgstr "Имя"
+
+#: src/common/mime_categories.py:22
+msgid "Audio"
+msgstr "Аудио"
+
+#: src/cat_mode/mime_editor_cat_mode.py:48
+msgid "Categories"
+msgstr "Категории"
+
+#: src/app_mode/mime_editor_app_mode.py:227
+#: src/cat_mode/mime_editor_cat_mode.py:135
+msgid "Choose an application"
+msgstr "Выберите приложение"
+
+#: src/app_mode/ui_app_mode.glade:105
+msgid "Command"
+msgstr "Команда"
+
+#: src/cat_mode/mime_editor_cat_mode.py:193
+msgid "Command line"
+msgstr "Командная строка"
+
+#: src/app_mode/ui_app_mode.glade:303
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/cat_mode/ui_cat_mode.glade:159
+msgid "Edit"
+msgstr "Правка"
+
+#: src/common/mime_view.py:116
+msgid "File Type"
+msgstr "Тип файла"
+
+#: src/ui_main_window.glade:124
+msgid "Group by applications"
+msgstr "Группировать по приложению"
+
+#: src/ui_main_window.glade:116
+msgid "Group by categories"
+msgstr "Группировать по категории"
+
+#: src/app_mode/ui_app_mode.glade:399
+msgid "Hide invisible"
+msgstr "Скрыть невидимые"
+
+#: src/common/mime_categories.py:23
+msgid "Image"
+msgstr "Изображение"
+
+#: src/app_mode/ui_app_mode.glade:279
+msgid "Mark"
+msgstr "Отметить"
+
+#: src/app_mode/mime_view_app_mode.py:103
+msgid "Mime Type"
+msgstr "Тип"
+
+#: src/app_mode/ui_app_mode.glade:83
+msgid "Name"
+msgstr "Имя"
+
+#: src/app_mode/ui_app_mode.glade:422 src/app_mode/ui_app_mode.glade:673
+msgid "Options"
+msgstr "Опции"
+
+#: src/cat_mode/mime_view_cat_mode.py:81
+msgid "Program"
+msgstr "Программа"
+
+#: src/app_mode/ui_app_mode.glade:318
+msgid "Reset"
+msgstr "Сброс"
+
+#: src/cat_mode/ui_cat_mode.glade:168
+msgid "Revert"
+msgstr "Отменить"
+
+#: src/cat_mode/ui_cat_mode.glade:178
+msgid "Select"
+msgstr "Выбрать"
+
+#: src/cat_mode/ui_cat_mode.glade:7
+msgid "Select Application"
+msgstr "Выберите приложение"
+
+#: src/cat_mode/ui_cat_mode.glade:252
+msgid "Select default application for following filetype(s):"
+msgstr "Установить приложение для следующих типов"
+
+#: src/cat_mode/ui_cat_mode.glade:64
+msgid "Select from list ..."
+msgstr "Выберите из списка"
+
+#: src/app_mode/ui_app_mode.glade:230
+msgid "Set default application"
+msgstr "Установить приложение по умолчанию"
+
+#: src/app_mode/ui_app_mode.glade:639
+msgid "Show all for"
+msgstr "Показать все"
+
+#: src/cat_mode/ui_cat_mode.glade:409
+msgid "Show only associated types"
+msgstr "Показать только имеющие приложение"
+
+#: src/app_mode/ui_app_mode.glade:624
+msgid "Show only registered"
+msgstr "Показать только зарегистрированные"
+
+#: src/common/mime_categories.py:24
+msgid "Text"
+msgstr "Текст"
+
+#: src/app_mode/ui_app_mode.glade:288
+msgid "Unmark"
+msgstr "Снять отметку"
+
+#: src/common/mime_categories.py:25
+msgid "Video"
+msgstr "Видео"
+
+#: src/app_mode/ui_app_mode.glade:383
+msgid "With file support only"
+msgstr "Только с поддержкой файлов"
+
+#: src/ui_main_window.glade:56
+msgid "_Edit"
+msgstr "_Правка"
+
+#: src/ui_main_window.glade:26
+msgid "_File"
+msgstr "_Файл"
+
+#: src/ui_main_window.glade:137
+msgid "_Help"
+msgstr "_Справка"
+
+#: src/ui_main_window.glade:106
+msgid "_View"
+msgstr "_Вид"

@@ -6,6 +6,7 @@ Created on Wed Dec  7 15:11:32 2016
 @author: pavel
 """
 import os
+APP = "mime-editor-gui"
 DIR = os.path.dirname(os.path.realpath(__file__))
 
 import sys
@@ -19,8 +20,8 @@ from gi.repository import Gtk
 
 import locale
 locale.setlocale(locale.LC_ALL, '')
-if os.path.isdir("./locale"):
-    locale.bindtextdomain(APP, "./locale")
+if os.path.isdir("../locale"):
+    locale.bindtextdomain(APP, "../locale")
     locale.textdomain(APP)
 from locale import gettext as _
 
@@ -30,7 +31,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL) #handle Ctrl-C
 import mime_editor_app_mode
 import mime_editor_cat_mode
 
-APP = os.path.join(DIR, "mime-editor-gui")
+
 GLADE_FILE = "ui_main_window.glade"
 
 editor_modes = {  "app_mode" : mime_editor_app_mode.MainWidget,

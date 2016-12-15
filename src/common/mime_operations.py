@@ -114,6 +114,13 @@ def reset_associations(mtypes):
             Gio.AppInfo.reset_type_associations(mtype)
         except Exception as e:
                 print(e)
+                
+def add_associations(app, mtypes):
+    for mtype in mtypes:
+        try: 
+            app.add_supports_type(mtype)
+        except Exception as e:
+                print(e)                
             
 def remove_associations(app, mtypes):
     for mtype in mtypes:

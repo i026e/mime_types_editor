@@ -23,7 +23,7 @@
               <object class="GtkMenuItem" id="file_menuitem">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Файл</property>
+                <property name="label" translatable="yes">_File</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="file_menu">
@@ -53,7 +53,7 @@
             <child>
               <object class="GtkMenuItem" id="edit_menuitem">
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Правка</property>
+                <property name="label" translatable="yes">_Edit</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu2">
@@ -103,7 +103,7 @@
               <object class="GtkMenuItem" id="view_menuitem">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Вид</property>
+                <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu4">
@@ -134,7 +134,7 @@
               <object class="GtkMenuItem" id="help_menuitem">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Справка</property>
+                <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu3">

@@ -30,35 +30,6 @@ print(os.path.dirname(os.path.realpath(__file__)))
 GLADE_FILE = os.path.join(DIR,"./ui_app_mode.glade")
 
 
-"""
-class AddMimesView(mime_types_view.MimesViewWithFlags):
-    def __init__(self, builder):
-        super(AddMimesView, self).__init__(builder, "all_mime_types_treeview")
-
-        self._init_context_menu()
-
-    def _init_context_menu(self):
-        pass
-
-    def get_initial_data(self, *args):
-        return mime_operations.get_known_mtypes()
-
-    def get_model_data_row(self, mtype, app):
-        flag = mime_operations.is_app_default(app, mtype)
-        descr, icon = mime_operations.get_mime_bio(mtype, ICON_SIZE)
-
-        # mtype, mtype_description, mtype_icon,
-        # mtype_selected. mtype_selected_by_default,
-        # mtype_possible_to change_selection
-        # mtype_deleted, background_color
-
-        return [mtype, descr, icon,
-                flag, flag, not flag,
-                False, self.CELL_COLOR_NORMAL]
-
-
-"""
-
 class AppCard:
     def __init__(self, builder):
         self.builder = builder
@@ -178,7 +149,7 @@ class AddMTypeDialog:
         self.dialog.set_transient_for(parent_window)
         self.dialog.connect("delete-event", self.hide)
 
-        #self.view = AddMimesView(self.builder)
+        self._init_buttons()
 
     def _init_buttons(self):
         self.ok_button = self.builder.get_object("add_mtype_ok_button")
@@ -188,25 +159,22 @@ class AddMTypeDialog:
         self.cancel_button.connect("clicked", self.hide)
 
     def hide(self, *args):
-
         self.dialog.hide()
-        #self.list_store.clear()
-
-
-
         return True #!!!
 
     def show(self, app):
-        #self.set_data()
-        #self.indicate_default()
-
-        #self.mtypes_dialog_label.set_text(" \n".join(self.mtypes))
-
-        self.view.set_data(app)
-
         self.dialog.run()
+
     def on_ok_button_clicked(self, *args):
-        pass
+        text_box = self.builder.get_object("new_mtype_entry")
+        reg_button = self.builder.get_object("register_mtype_button")
+        def_button = self.builder.get_object("set_default_mtype_button")
+        
+        mtype = text_box.get_text()        
+        set_registered = reg_button.get_active()
+        set_default = def_button.get_active()
+
+        self.on_dialog_ok(mtype, set_registered, set_default)
         self.hide()
 
 class AddAppDialog:
@@ -383,7 +351,7 @@ class MainWidget:
     def on_add_mtype_button_clicked(self, *args):
         if self.add_mtype_dialog is None:
             self.add_mtype_dialog = AddMTypeDialog(self.builder,
-                                                   self.window, print)
+                                                   self.window, self.on_add_mtype_ok)
         self.add_mtype_dialog.show(self.current_app)
 
     def on_add_app_button_clicked(self, *args):
@@ -404,5 +372,14 @@ class MainWidget:
 
     def on_category_changed(self, category):
         self.mimes_view.filter_category(category)
+    
+    def on_add_mtype_ok(self, mtype, set_registered, set_default):
+        if set_registered:
+            mime_operations.add_associations(self.current_app, [mtype])
+            
+        if set_default:
+            mime_operations.set_app_default(self.current_app, [mtype])
+            
+        self.on_app_selected(self.current_app)
 
 

@@ -57,7 +57,6 @@
               <object class="GtkLabel" id="add_new_app_lable">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
                 <property name="label" translatable="yes">Add new app</property>
               </object>
               <packing>
@@ -190,7 +189,7 @@
               <object class="GtkLabel" id="add_mimetype_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Select from list</property>
+                <property name="label" translatable="yes">Add new mime type</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -199,49 +198,47 @@
               </packing>
             </child>
             <child>
-              <object class="GtkScrolledWindow" id="add_mimetype_scrolledwindow">
+              <object class="GtkEntry" id="new_mtype_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="shadow_type">in</property>
-                <child>
-                  <object class="GtkTreeView" id="all_mime_types_treeview">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection" id="all_mime_types_treeview_selection"/>
-                    </child>
-                  </object>
-                </child>
               </object>
               <packing>
-                <property name="expand">True</property>
+                <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <object class="GtkExpander" id="add_new_expander">
+              <object class="GtkCheckButton" id="register_mtype_button">
+                <property name="label" translatable="yes">Add association</property>
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
-                <child>
-                  <object class="GtkEntry" id="add_mimetype_entry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                  </object>
-                </child>
-                <child type="label">
-                  <object class="GtkLabel" id="add_new_mtype_label">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Add new</property>
-                    <property name="lines">0</property>
-                  </object>
-                </child>
+                <property name="receives_default">False</property>
+                <property name="xalign">0</property>
+                <property name="active">True</property>
+                <property name="draw_indicator">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="set_default_mtype_button">
+                <property name="label" translatable="yes">Set default application</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="xalign">0</property>
+                <property name="active">True</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>

@@ -101,19 +101,14 @@ class MimeViewCategories(mime_view.MimeView):
 
 
     def update_data(self, mtypes_to_change):
-        tree_iter = self.list_store.get_iter_first()
+        for model, tree_iter in self.iterate_by_values(self.MIME_TYPE, mtypes_to_change):
+            row_mtype = self.list_store.get_value(tree_iter, self.MIME_TYPE)
 
-        while tree_iter:
-            row_mtype = self.list_store.get_value(tree_iter, self.MTYPE)
+            app = mime_operations.get_default_app(row_mtype)
+            name, icon, *extra = mime_operations.get_app_bio(app, ICON_SIZE)
 
-            if row_mtype in mtypes_to_change:
-                app = mime_operations.get_default_app(row_mtype)
-                name, icon, *extra = mime_operations.get_app_bio(app, ICON_SIZE)
-
-                self.list_store.set_value(tree_iter, self.APP, name)
-                self.list_store.set_value(tree_iter, self.APP_IMG, icon)
-
-            tree_iter = self.list_store.iter_next(tree_iter)
+            self.list_store.set_value(tree_iter, self.MIME_APP, name)
+            self.list_store.set_value(tree_iter, self.MIME_APP_IMG, icon)
 
     def filter_associated(self, show_all = True):
         self.set_filter_params("associated_filter",

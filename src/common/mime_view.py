@@ -194,6 +194,13 @@ class MimeView:
             tree_iter = self.list_store.get_iter(self.get_store_path(path))
             yield self.list_store, tree_iter
 
+    def iterate_by_values(self, column, values):
+        tree_iter = self.list_store.get_iter_first()
+        while tree_iter:
+            val = self.list_store.get_value(tree_iter, column)
+            if val in values:
+                yield self.list_store, tree_iter
+            tree_iter = self.list_store.iter_next(tree_iter)
 
     def set_value_if_cond(self, model, tree_iter, column,
                          get_value_func = None, value = None,
@@ -214,7 +221,7 @@ class MimeView:
     def set_value_to_all(self, column,
                          get_value_func = None, value = None,
                          conditions_func = None, **kwargs):
-        
+
         for (model, iter_) in self.iterate_all():
             self.set_value_if_cond(model, iter_, column,
                                    get_value_func, value,
@@ -224,17 +231,17 @@ class MimeView:
     def set_value_to_selected(self, column,
                          get_value_func = None, value = None,
                          conditions_func = None, **kwargs):
-        
+
         for (model, iter_) in self.iterate_selected():
             self.set_value_if_cond(model, iter_, column,
                                    get_value_func, value,
                                    conditions_func, **kwargs)
-            
+
 
     def set_value_to_visible(self, column,
                          get_value_func = None, value = None,
                          conditions_func = None, **kwargs):
-        
+
         for (model, iter_) in self.iterate_visible():
             self.set_value_if_cond(model, iter_, column,
                                    get_value_func, value,

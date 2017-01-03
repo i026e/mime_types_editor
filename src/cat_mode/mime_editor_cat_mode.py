@@ -244,7 +244,7 @@ class MimeSetDialog:
         for path in pathlist :
             tree_iter = model.get_iter(path)
             value = model.get_value(tree_iter, self.APP_OBJ)
-            self.selection = value
+            selection = value
 
         self.hide()
         self.on_dialog_ok(selection, self.mtypes)
@@ -306,6 +306,7 @@ class MainWidget:
         self.mime_view.filter_category(category_id[0])
 
     def on_mtypes_edit_ok(self, app, mtypes):
+        #print(app)
         if app is not None:
             mime_operations.set_app_default(app, mtypes)
             self.mime_view.update_data(mtypes)

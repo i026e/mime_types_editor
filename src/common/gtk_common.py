@@ -60,8 +60,6 @@ class TextColumn(Gtk.TreeViewColumn):
 
         self.set_resizable(True)
 
-
-
     def set_attribute(self, name, model_column):
         for renderer in self.cell_renderers:
             self.add_attribute(renderer, name, model_column)

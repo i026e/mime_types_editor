@@ -5,17 +5,17 @@ Created on Thu Dec  1 08:15:56 2016
 
 @author: pavel
 """
+import mime_operations, mime_categories
+import data_filter
 
-from gi.repository import Gtk, Gdk, Gio
+from gi.repository import Gtk, Gdk, Gio, GObject
 from gi.repository import GdkPixbuf
 
 from gtk_common import ImageTextColumn, FlagColumn, TextColumn
 from gtk_common import ICON_SIZE
 
-import mime_operations, mime_categories
-import data_filter
-
 from locale import gettext as _
+from threading import Thread
 
 
 
@@ -94,9 +94,13 @@ class MimeView:
 
 
     def set_data(self, *args, **kwargs):
+        def background_job():
+            mtypes = self._get_initial_data(*args, **kwargs)
+            GObject.idle_add(self._add_mtypes, mtypes)
+
         self.list_store.clear()
-        mtypes = self._get_initial_data(*args, **kwargs)
-        self._add_mtypes(mtypes)
+        self.thread = Thread(target = background_job)
+        self.thread.start()
 
     def set_filter_params(self, filter_name, **kwargs):
         if filter_name in self.data_filters:

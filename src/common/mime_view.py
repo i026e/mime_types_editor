@@ -59,6 +59,7 @@ class MimeView:
         #print("INSIDE on_searchbox_changed, value ", '"' + search_widget.get_text() + '"' )
         self.SEARCH_STRING = search_widget.get_text()
         self.set_search_filter(self.SEARCH_STRING)
+        self.filter_model.refilter()
 
     def _init_mappings(self):
         #mappings

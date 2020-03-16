@@ -71,6 +71,10 @@ class MainWindow:
         cat_mode_menuitem.connect("activate", self.switch_mode, "cat_mode")
         app_mode_menuitem.connect("activate", self.switch_mode, "app_mode")
 
+        # Help menu
+        about_menuitem = self.builder.get_object("imagemenuitem10")
+        about_menuitem.connect("activate", self.about_menu)
+
     def run(self):
         self.window.show()
         Gtk.main()
@@ -82,6 +86,11 @@ class MainWindow:
         if new_mode != self.current_mode:
             os.execl(sys.executable, sys.executable, sys.argv[0], new_mode)
 
+    def about_menu(self, widget):
+        # abused from https://athenajc.gitbooks.io/python-gtk-3-api/content/gtk-group/gtkaboutdialog.html
+        self.about_window = self.builder.get_object("about_window")
+        self.about_window.connect('response', lambda dialog, data: self.about_window.hide())
+        self.about_window.show()
 
 if __name__ == "__main__":
     mode = "cat_mode"

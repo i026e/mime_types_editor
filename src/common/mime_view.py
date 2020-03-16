@@ -60,6 +60,7 @@ class MimeView:
     def _init_filters(self):
         self.ordered_data_filters = [] #order may be matter
         self.data_filters = {} # save reference by name
+        self.search_filters = {}
 
         #add category filter
         category_filter = data_filter.CategoryFilter(self.MIME_CATEGORY,
@@ -70,6 +71,10 @@ class MimeView:
     def _add_filter_to_cascade(self, filter_name, data_filter):
         self.ordered_data_filters.append(data_filter)
         self.data_filters[filter_name] = data_filter
+
+    def _set_search_filter(self, filter_name, data_filter):
+        self.data_filters[filter_name].set_params(**kwargs)
+        self.filter_model.refilter()
 
     def _init_model(self):
         """liststore -> filter -> sort -> view"""

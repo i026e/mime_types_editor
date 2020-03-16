@@ -41,15 +41,18 @@ class RegexFilter(DataFilter):
         else:
             self.matchregex = ".*" + matchstring + ".*"
         self.pattern = re.compile(self.matchregex, re.IGNORECASE)
-        print("Setting RegexFilter to:",self.matchregex)
+        #print("Setting RegexFilter to:",self.matchregex)
 
     def process_row(self, model, iter_, data):
         if self.matchstring != data:
             self._new_regex(data)
+        # columns from MimeView class in mime_view.py
         instring=model.get_value(iter_,2)
-        result = self.pattern.match(instring)
-        #print("ROW ",'"' + instring + '"', " test against regex", self.matchstring, "is", result, "data=",data)
-        return result != None
+        in_column2 = self.pattern.match(instring)
+        instring=model.get_value(iter_,0)
+        in_column0 = self.pattern.match(instring)
+        #print("ROW ",'"' + instring + '"', " test against regex", self.matchstring, "is", in_column2, "data=",data)
+        return in_column2 != None or in_column0 != None
 
 class CategoryFilter(DataFilter):
     def __init__(self, category_column, current_category_id):

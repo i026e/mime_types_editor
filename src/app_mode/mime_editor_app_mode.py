@@ -5,7 +5,7 @@ Created on Fri Nov 25 07:54:51 2016
 
 @author: pavel
 """
-import os
+import os, re
 DIR = os.path.dirname(os.path.realpath(__file__))
 
 import sys
@@ -56,6 +56,8 @@ class AppsView:
     def __init__(self, builder, on_app_changed):
         self.builder = builder
         self.on_app_changed = on_app_changed
+        self.SEARCH_STRING = ""
+        self.pattern = re.compile(".*")
 
         self.apps_view = self.builder.get_object("treeview_applications")
 
@@ -67,7 +69,23 @@ class AppsView:
         tree_selection = self.apps_view.get_selection()
         tree_selection.connect("changed", self.on_selection_changes)
 
+        self.searchbox = builder.get_object("searchbox")
+        self.searchbox.connect("search-changed", self.on_searchbox_changed)
 
+
+    def on_searchbox_changed(self, search_widget):
+        #print("INSIDE on_searchbox_changed, value ", '"' + search_widget.get_text() + '"' )
+        self._new_regex(search_widget.get_text())
+        self.cascade_filter.refilter()
+
+    def _new_regex(self, matchstring):
+        self.SEARCH_STRING = matchstring
+        if matchstring == "":
+            self.matchregex = ".*"
+        else:
+            self.matchregex = ".*" + matchstring + ".*"
+        self.pattern = re.compile(self.matchregex, re.IGNORECASE)
+        #print("Setting app mode matchregex to:",self.matchregex)
 
     def _add_columns(self):
         column = gtk_common.ImageTextColumn(_("Application"), self.APP_IMG, self.APP_NAME)
@@ -103,13 +121,22 @@ class AppsView:
 
     def _cascade_filter_func(self, *args, **kwargs):
         return self._visible_only_filter_func(*args, **kwargs) and \
-                self._with_file_support_only_filter_func(*args, **kwargs)
+                self._with_file_support_only_filter_func(*args, **kwargs) and \
+                self._matches_search_regex(*args, **kwargs)
 
     def _visible_only_filter_func(self, model, iter, data):
         return self.show_invisible or model[iter][self.APP_VISIBLE]
 
     def _with_file_support_only_filter_func(self, model, iter, data):
         return self.show_without_file_support or model[iter][self.APP_SUPPORT_FILES]
+
+    def _matches_search_regex(self, model, iter, data):
+        instring=model.get_value(iter,1)
+        in_column1 = self.pattern.match(instring)
+        instring = model.get_value(iter,0).get_string("Exec")
+        in_column0 = self.pattern.match(instring)
+        #print("ROW ",'"' + instring + '"', "test against regex", self.SEARCH_STRING, "is", in_column0)
+        return in_column1 != None or in_column0 != None
 
     def filter_visible(self, show_invisible = False):
         self.show_invisible = show_invisible

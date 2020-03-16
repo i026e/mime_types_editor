@@ -51,8 +51,6 @@ class CategoriesView(gtk_common.CategoriesWidget):
         #register callback
         tree_selection = self.categories_view.get_selection()
         tree_selection.connect("changed", self.on_selection_changes)
-        self.searchbox = builder.get_object("searchbox")
-        self.searchbox.connect("search-changed", self.on_searchbox_changed)
 
     def _fill_list_store(self):
         categories = sorted((_(name), cat ,id_)
@@ -78,11 +76,6 @@ class CategoriesView(gtk_common.CategoriesWidget):
             cat_ids.append(value)
         self.on_category_changed(cat_ids)
 
-
-    def on_searchbox_changed(self, search_widget):
-        print("INSIDE on_searchbox_changed, value ", '"' + search_widget.get_text() + '"' )
-        print(self)
-        #self.mime_view.filter_category(category_id[0])
 
 class AddAppDialog:
     def __init__(self, builder, parent_window, on_add_dialog_apply):

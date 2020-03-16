@@ -7,6 +7,7 @@ Created on Fri Nov 25 07:18:57 2016
 """
 
 import mime_categories
+import re
 
 class DataFilter:
     def __init__(self, enabled = True):
@@ -29,7 +30,26 @@ class GeneralFilter(DataFilter):
         value = model.get_value(iter_, self.column)
         return self.value_condition_fn(value)
 
+class RegexFilter(DataFilter):
+    def __init__(self, matchstring):
+        self._new_regex(matchstring)
 
+    def _new_regex(self, matchstring):
+        self.matchstring = matchstring
+        if matchstring == "":
+            self.matchregex = ".*"
+        else:
+            self.matchregex = ".*" + matchstring + ".*"
+        self.pattern = re.compile(self.matchregex, re.IGNORECASE)
+        print("Setting RegexFilter to:",self.matchregex)
+
+    def process_row(self, model, iter_, data):
+        if self.matchstring != data:
+            self._new_regex(data)
+        instring=model.get_value(iter_,2)
+        result = self.pattern.match(instring)
+        #print("ROW ",'"' + instring + '"', " test against regex", self.matchstring, "is", result, "data=",data)
+        return result != None
 
 class CategoryFilter(DataFilter):
     def __init__(self, category_column, current_category_id):

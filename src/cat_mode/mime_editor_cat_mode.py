@@ -77,7 +77,6 @@ class CategoriesView(gtk_common.CategoriesWidget):
         self.on_category_changed(cat_ids)
 
 
-
 class AddAppDialog:
     def __init__(self, builder, parent_window, on_add_dialog_apply):
         self.builder = builder
@@ -118,6 +117,7 @@ class AddAppDialog:
         return False #!!!
 
     def on_custom_entry_changed(self, *args):
+        print("INSIDE on_custom_entry_changed")
         text = self.custom_entry.get_text()
         if text != self.cline_text:
             self.cline_text = text

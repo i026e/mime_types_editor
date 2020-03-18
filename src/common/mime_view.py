@@ -23,6 +23,8 @@ class MimeView:
     UI_VIEW_ID = None
     UI_CONTEXT_MENU_ID = None
 
+    SEARCH_STRING = ""
+
     #model columns
     MIME_TYPE = 0
     MIME_CATEGORY = 1
@@ -39,6 +41,8 @@ class MimeView:
          #callbacks
         self.mtypes_view.connect("button-press-event", self.on_mouse_clicked)
         self.mtypes_view.connect("key-press-event", self.on_key_pressed)
+        self.searchbox = builder.get_object("searchbox")
+        self.searchbox.connect("search-changed", self.on_searchbox_changed)
 
         #allow multiple selection
         self.tree_selection = self.mtypes_view.get_selection()
@@ -50,6 +54,12 @@ class MimeView:
         self._init_model()
         self._init_columns()
         self._init_context_menu()
+
+    def on_searchbox_changed(self, search_widget):
+        #print("INSIDE on_searchbox_changed, value ", '"' + search_widget.get_text() + '"' )
+        self.SEARCH_STRING = search_widget.get_text()
+        self.set_search_filter(self.SEARCH_STRING)
+        self.filter_model.refilter()
 
     def _init_mappings(self):
         #mappings
@@ -70,6 +80,13 @@ class MimeView:
     def _add_filter_to_cascade(self, filter_name, data_filter):
         self.ordered_data_filters.append(data_filter)
         self.data_filters[filter_name] = data_filter
+
+    def set_search_filter(self, search_string):
+        search_filter = data_filter.RegexFilter(search_string)
+        if "search_filter" in self.data_filters:
+            self.data_filters["search_filter"] = search_filter
+        else:
+            self._add_filter_to_cascade("search_filter", search_filter)
 
     def _init_model(self):
         """liststore -> filter -> sort -> view"""
@@ -130,7 +147,10 @@ class MimeView:
     def cascade_filter_func(self, model, iter_, data):
         # return True if all conditions are satisfied
         for filter_ in self.ordered_data_filters:
-            if not filter_.process_row(model, iter_, data):
+            outdata = data
+            if isinstance(filter_, data_filter.RegexFilter):
+                outdata = self.SEARCH_STRING
+            if not filter_.process_row(model, iter_, outdata):
                 return False
         return True
 
